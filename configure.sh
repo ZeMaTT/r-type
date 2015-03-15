@@ -1,24 +1,26 @@
 #!/usr/bin/env bash
 
-if [ "$EUID" -ne 0 ]
-  then echo "Please run as root"
-  exit
-fi
+SOURCE_DIRECTORY=`pwd`
+EXT_LIB_DIR="$SOURCE_DIRECTORY/ext/lib"
+EXT_SRC_DIR="$SOURCE_DIRECTORY/ext/src"
+NCPUS=6
 
 apt-get install libgl1-mesa-dev libglu1-mesa-dev libxrandr-dev libudev-dev libjpeg8-dev libfreetype6-dev libopenal-dev libsndfile1-dev
 # if missing, add this between libglu1-mesa-dev and libxrandr-dev
 # libglew-dev
 
-PREVIOUS_PWD=`pwd`
-EXT_LIB_DIR=`pwd`/ext/lib/
+mkdir -p $EXT_SRC_DIR $EXT_LIB_DIR
+wget --output-document=/tmp/SFML-2.2-sources.zip  http://www.sfml-dev.org/files/SFML-2.2-sources.zip
+unzip /tmp/SFML-2.2-sources.zip -d $EXT_SRC_DIR
 
-for i in ext/src/* ; do
+
+for i in $EXT_SRC_DIR/* ; do
   cd $i
   cmake .
   make -j6
   cp lib/* $EXT_LIB_DIR
-  cd $PREVIOUS_PWD
+  cd $SOURCE_DIRECTORY
 done
 
 cmake .
-make -j6
+make -j$NCPUS
