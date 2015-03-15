@@ -2,8 +2,10 @@
 ## CMAKE file for r-type/server
 ##
 
+cmake_minimum_required(VERSION 2.8)
+
 set(sources
-	src/client.cpp
+	src/server.cpp
 	)
 	
 set(unix_sources 
@@ -15,6 +17,7 @@ set(windows_sources
 	)
 
 include_directories(./header/)
+
 
 add_definitions(-pthread)
 if (UNIX)
